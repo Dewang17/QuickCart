@@ -85,7 +85,14 @@ const Navbar = () => {
           </button>
         )}
         {user ? (
-          <UserButton>
+          <UserButton
+            userProfileMode="modal"
+                appearance={{
+                  elements: {
+                    userProfileDanger: "hidden", // hides dangerous actions like Delete
+                  },
+            }}
+          >
             <UserButton.MenuItems>
               <UserButton.Action
                 label="Home"
@@ -130,3 +137,4 @@ const Navbar = () => {
 };
 
 export default Navbar;
+
