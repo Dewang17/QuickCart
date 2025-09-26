@@ -11,20 +11,34 @@ export const syncUserCreation = inngest.createFunction(
     id: "sync-user-from-clerk",
   },
   { event: "clerk/user.created" },
-
   async ({ event }) => {
-    const { id, first_name, last_name, email_addresses, image_url } =
-      event.data;
-    const userData = {
-      _id: id,
-      email: email_addresses[0]?.email_address,
-      name: `${first_name || ""} ${last_name || ""}`.trim(),
-      imageUrl: image_url,
-    };
-    await connectDB();
-    await User.create(userData);
+    try {
+      const { id, first_name, last_name, email_addresses, image_url } =
+        event.data;
+
+      // Handle empty email_addresses array
+      const email =
+        email_addresses && email_addresses.length > 0
+          ? email_addresses[0].email_address
+          : `${id}@temp.com`; // fallback email
+
+      const userData = {
+        _id: id,
+        email: email,
+        name: `${first_name || ""} ${last_name || ""}`.trim(),
+        imageUrl: image_url,
+      };
+
+      await connectDB();
+      await User.create(userData);
+      console.log("User created:", id);
+    } catch (error) {
+      console.error("Error creating user:", error);
+      throw error;
+    }
   }
 );
+
 // Inngest function to update user data in database
 export const syncUserUpdation = inngest.createFunction(
   {
@@ -57,3 +71,4 @@ export const syncUserDeletion = inngest.createFunction(
     await User.findByIdAndDelete(id);
   }
 );
+  
