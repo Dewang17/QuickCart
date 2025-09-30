@@ -8,11 +8,11 @@ This repo is **frontend only** – contributors can improve the design, add new 
 
 ## Features
 
--   Built with **Next.js + Tailwind CSS**
--   Responsive design
--   Reusable components
--   Customizable layouts and colors
--   Open for contributions (UI/UX, animations, themes, layouts etc.)
+- Built with **Next.js + Tailwind CSS**
+- Responsive design
+- Reusable components
+- Customizable layouts and colors
+- Open for contributions (UI/UX, animations, themes, layouts etc.)
 
 ---
 
@@ -20,22 +20,22 @@ This repo is **frontend only** – contributors can improve the design, add new 
 
 1. Clone the repo
 
-    ```bash
-    git clone https://github.com/GreatStackDev/QuickCart.git
-    cd QuickCart
-    ```
+   ```bash
+   git clone https://github.com/dewangDev/QuickCart.git
+   cd QuickCart
+   ```
 
 2. Install dependencies
 
-    ```bash
-    npm install
-    ```
+   ```bash
+   npm install
+   ```
 
 3. Run locally
 
-    ```bash
-    npm run dev
-    ```
+   ```bash
+   npm run dev
+   ```
 
 ---
 
