@@ -19,7 +19,7 @@ export const AppContextProvider = (props) => {
 
   const { user, isSignedIn } = useUser(); // 👈 now we have `user`
   const [products, setProducts] = useState([]);
-  const [userData, setUserData] = useState(null);
+  const [userData, setUserData] = useState(false);  // null 
   const [isSeller, setIsSeller] = useState(false);
 
   const [cartItems, setCartItems] = useState({});
@@ -39,6 +39,7 @@ export const AppContextProvider = (props) => {
       });
       if (data.success) {
         setUserData(data.user);
+        console.log(data.user);
         setCartItems(data.user.cartItems);
       } else {
         toast.error(data.message);
@@ -82,12 +83,16 @@ export const AppContextProvider = (props) => {
   useEffect(() => {
     if (isSignedIn) {
       fetchProductData();
-      if (user) {
-        fetchUserData();
-      }
+      
     }
   }, [isSignedIn, user]);
 
+  useEffect(()=>{
+    if (user) {
+        fetchUserData();
+      }
+  }, [user]);
+  
   const value = {
     user,
     getToken,

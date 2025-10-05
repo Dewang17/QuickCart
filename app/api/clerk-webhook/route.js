@@ -15,11 +15,11 @@ export async function POST(req) {
   const svix_signature = headerPayload.get("svix-signature");
 
   if (!svix_id || !svix_timestamp || !svix_signature) {
-    return new Response("Error occured -- no svix headers", { status: 400 });
+    return new Response("Error occurred -- no svix headers", { status: 400 });
   }
 
-  const payload = await req.json();
-  const body = JSON.stringify(payload);
+  // Clerk requires raw body for signature verification
+  const body = await req.text();
 
   const wh = new Webhook(WEBHOOK_SECRET);
   let evt;
@@ -31,14 +31,17 @@ export async function POST(req) {
       "svix-signature": svix_signature,
     });
   } catch (err) {
-    return new Response("Error occured", { status: 400 });
+    console.error("❌ Webhook verification failed:", err.message);
+    return new Response("Invalid signature", { status: 400 });
   }
 
-  // Send to Inngest
+  // Forward to Inngest
   await inngest.send({
-    name: `clerk/${evt.type}`,
+    name: `clerk/${evt.type}`, // e.g. clerk/user.created
     data: evt.data,
   });
 
-  return new Response("", { status: 200 });
+  console.log("✅ Clerk event forwarded to Inngest:", evt.type);
+
+  return new Response("Webhook received", { status: 200 });
 }
