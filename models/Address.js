@@ -10,5 +10,5 @@ const addressSchema = new mongoose.Schema({
   state: { type: String, required: true },
 });
 const Address =
-  mongoose.model.address || mongoose.model("address", addressSchema);
+  mongoose.models.address || mongoose.model("address", addressSchema);
 export default Address;
