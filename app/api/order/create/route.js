@@ -16,16 +16,16 @@ export async function POST(request) {
     // calculate total amount
     const amount = await items.reduce(async (acc, item) => {
       const product = await Product.findById(item.product);
-      return acc+product.offerPrice * item.quantity
-   },0)
+      return acc + product.offerPrice * item.quantity;
+    }, 0);
     // send to Inngest
     await inngest.send({
-      name: "order/create",
+      name: "order/created",
       data: {
         userId,
         address,
         items,
-        amount:amount+Math.floor(amount*0.02),
+        amount: amount + Math.floor(amount * 0.02),
         date: Date.now(),
       },
     });
