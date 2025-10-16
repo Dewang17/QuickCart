@@ -28,6 +28,9 @@ export const syncUserCreation = inngest.createFunction(
         email: email,
         name: `${first_name || ""} ${last_name || ""}`.trim(),
         imageUrl: image_url,
+        // Initialize role and roleRequest
+        role: "user", // default role
+        roleRequest: null, // no pending requests
       };
 
       await connectDB();
@@ -57,6 +60,21 @@ export const syncUserUpdation = inngest.createFunction(
           ? email_addresses[0].email_address
           : `${id}@temp.com`; // fallback email
 
+      // Fetch current user from DB
+      const existingUser = await User.findById(id);
+
+      if (!existingUser) {
+        console.log("User not found, creating new user...");
+        await User.create({
+          _id: id,
+          email,
+          name: `${first_name || ""} ${last_name || ""}`.trim(),
+          imageUrl: image_url,
+          role: "user",
+          roleRequest: null,
+        });
+        return;
+      }
       const userData = {
         _id: id,
         email: email,

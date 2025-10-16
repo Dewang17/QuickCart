@@ -13,9 +13,14 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <ClerkProvider>
+    <ClerkProvider
+      captcha={{
+        provider: "turnstile",
+        siteKey: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY,
+      }}
+    >
       <html lang="en">
-        <body className={`${outfit.className} antialiased text-gray-700`}>
+        <body>
           <Toaster />
           <AppContextProvider>{children}</AppContextProvider>
         </body>

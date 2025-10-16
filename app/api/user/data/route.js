@@ -7,7 +7,7 @@ export async function GET(request) {
   try {
     // Get token from Authorization header
     const authHeader = request.headers.get("authorization");
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    if (!authHeader || !authHeader.startsWith("Bearer")) {
       return NextResponse.json({
         success: false,
         message: "No token provided",
@@ -23,19 +23,19 @@ export async function GET(request) {
     });
 
     console.log("User ID:", userId);
+    await connectDB();
 
     if (!userId) {
       return NextResponse.json({ success: false, message: "Invalid token" });
     }
     console.log({ userId });
 
-    await connectDB();
     const user = await User.findById(userId);
 
-    
+
     if (!user) {
       return NextResponse.json({ success: false, message: "User not found" });
-    } 
+    }
 
     return NextResponse.json({ success: true, user: user });
   } catch (error) {
@@ -43,4 +43,3 @@ export async function GET(request) {
     return NextResponse.json({ success: false, message: error.message });
   }
 }
-

@@ -7,11 +7,14 @@ import Image from "next/image";
 import { useClerk, UserButton } from "@clerk/nextjs"; // for signOut, navigation
 import { useUser } from "@clerk/nextjs"; // for user info
 import { useAuth } from "@clerk/nextjs";
+import BecomeSellerButton from "@/components/BecomeSellerButton";
 
 const Navbar = () => {
   const { isSeller, router } = useAppContext();
   const { openSignIn } = useClerk();
   const { user, isSignedIn } = useUser(); // <-- from Clerk
+
+  const isAdmin = user?.publicMetadata?.role === "admin"; // <-- add this
 
   return (
     <nav className="flex items-center justify-between px-6 md:px-16 lg:px-32 py-3 border-b border-gray-300 text-gray-700">
@@ -35,6 +38,14 @@ const Navbar = () => {
           Contact
         </Link>
 
+        {isAdmin && (
+          <button
+            onClick={() => router.push("/admin")}
+            className="text-xs border px-4 py-1.5 rounded-full bg-blue-600 text-white"
+          >
+            Admin Dashboard
+          </button>
+        )}
         {isSeller && (
           <button
             onClick={() => router.push("/seller")}
@@ -87,10 +98,10 @@ const Navbar = () => {
         {user ? (
           <UserButton
             userProfileMode="modal"
-                appearance={{
-                  elements: {
-                    userProfileDanger: "hidden", // hides dangerous actions like Delete
-                  },
+            appearance={{
+              elements: {
+                userProfileDanger: "hidden", // hides dangerous actions like Delete
+              },
             }}
           >
             <UserButton.MenuItems>
@@ -132,9 +143,9 @@ const Navbar = () => {
           </button>
         )}
       </div>
+      {user && !isSeller && !isAdmin && <BecomeSellerButton />}
     </nav>
   );
 };
 
 export default Navbar;
-
